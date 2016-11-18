@@ -2,15 +2,12 @@ package com.zj.expandviewdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Toast;
 
 import com.zj.expandviewdemo.action.ExSubViewGravity;
-import com.zj.expandviewdemo.view.ExpandTabView;
 import com.zj.expandviewdemo.view.ExSubViewArea;
 import com.zj.expandviewdemo.view.ExSubViewSingle;
-
-import java.util.ArrayList;
+import com.zj.expandviewdemo.view.ExpandTabView;
 
 public class MainActivity extends AppCompatActivity {
     private ExpandTabView tabView;
@@ -20,16 +17,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabView = (ExpandTabView)findViewById(R.id.expandTabView);
         ExSubViewArea viewArea = new ExSubViewArea(this, ExSubViewGravity.LEFT);
-        ExSubViewSingle viewType = new ExSubViewSingle(this,ExSubViewGravity.RIGHT,new String[]{"1","2","2","2"});
-        ArrayList<View> mViewArray = new ArrayList<View>();
-        ArrayList<String> mTextArray = new ArrayList<String>();
-        mViewArray.add(viewArea);
-        mViewArray.add(viewType);
-        mTextArray.add("区域");
-        mTextArray.add("tab2");
-        tabView.setValue(mTextArray, mViewArray);
-        tabView.setTitle("区域", 0);
-        tabView.setTitle("tab2", 1);
+        ExSubViewSingle viewType = new ExSubViewSingle(this,ExSubViewGravity.MID,new String[]{"1","2","3","4"});
+
+        tabView.addView("区域",viewArea);
+        tabView.addView("tab2",viewType);
+        tabView.addView("tab3",new ExSubViewSingle(this,ExSubViewGravity.RIGHT,new String[]{"11","22","33","44"}));
 
         viewArea.setOnSelectListener(new ExSubViewArea.OnSelectListener() {
             @Override

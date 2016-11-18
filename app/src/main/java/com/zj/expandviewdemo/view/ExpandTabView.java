@@ -3,7 +3,6 @@ package com.zj.expandviewdemo.view;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -18,11 +17,6 @@ import com.zj.expandviewdemo.action.ViewBaseAction;
 
 import java.util.ArrayList;
 
-/**
- * 菜单控件头部，封装了下拉动画，动态生成头部按钮个数
- * 
- */
-
 public class ExpandTabView extends LinearLayout implements OnDismissListener {
 
 	private ToggleButton selectedButton;
@@ -35,6 +29,7 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 	private int displayHeight;
 	private PopupWindow popupWindow;
 	private int selectPosition;
+	private int tabNum = 0;
 
 	public ExpandTabView(Context context) {
 		super(context);
@@ -46,87 +41,114 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 		init(context);
 	}
 
-	/**
-	 * 根据选择的位置设置tabitem显示的值
-	 */
 	public void setTitle(String valueText, int position) {
 		if (position < mToggleButton.size()) {
 			mToggleButton.get(position).setText(valueText);
 		}
 	}
 
-	public void setTitle(String title){
-		
-	}
-	/**
-	 * 根据选择的位置获取tabitem显示的值
-	 */
-	public String getTitle(int position) {
-		if (position < mToggleButton.size() && mToggleButton.get(position).getText() != null) {
-			return mToggleButton.get(position).getText().toString();
-		}
-		return "";
-	}
+	public void addView(String text,View view){
+		final RelativeLayout r = new RelativeLayout(mContext);
+		int maxHeight = (int) (displayHeight * 0.5);
+		RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, maxHeight);
+		rl.leftMargin = 10;
+		rl.rightMargin = 10;
+		removeParent(view);
+		r.addView(view, rl);
+		mViewArray.add(r);
+		r.setTag(SMALL);
+		ToggleButton tButton = new ExToggleButtton(getContext());
+		addView(tButton);
+		View line = new TextView(mContext);
+		line.setBackgroundResource(R.drawable.expand_choosebar_line);
+		LayoutParams lp = new LayoutParams(2, LayoutParams.FILL_PARENT);
+		addView(line, lp);
+		mToggleButton.add(tButton);
+		tButton.setText(text);
+		tButton.setTag(tabNum++);
 
-	/**
-	 * 设置tabitem的个数和初始值
-	 */
-	public void setValue(ArrayList<String> textArray, ArrayList<View> viewArray) {
-		if (mContext == null) {
-			return;
-		}
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		mTextArray = textArray;
-		for (int i = 0; i < viewArray.size(); i++) {
-			final RelativeLayout r = new RelativeLayout(mContext);
-			int maxHeight = (int) (displayHeight * 0.5);
-			RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, maxHeight);
-			rl.leftMargin = 10;
-			rl.rightMargin = 10;
-			removeParent(viewArray.get(i));
-			r.addView(viewArray.get(i), rl);
-			mViewArray.add(r);
-			r.setTag(SMALL);
-			ToggleButton tButton = new ExToggleButtton(getContext());
-			addView(tButton);
-			View line = new TextView(mContext);
-			line.setBackgroundResource(R.drawable.expand_choosebar_line);
-			if (i < viewArray.size() - 1) {
-				LayoutParams lp = new LayoutParams(2, LayoutParams.FILL_PARENT);
-				addView(line, lp);
+		r.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onPressBack();
 			}
-			mToggleButton.add(tButton);
-			tButton.setTag(i);
-			tButton.setText(mTextArray.get(i));
+		});
 
-			r.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onPressBack();
-				}
-			});
+		r.setBackgroundColor(mContext.getResources().getColor(R.color.expand_popup_background));
+		tButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // initPopupWindow();
+                ToggleButton tButton = (ToggleButton) view;
 
-			r.setBackgroundColor(mContext.getResources().getColor(R.color.expand_popup_background));
-			tButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					// initPopupWindow();
-					ToggleButton tButton = (ToggleButton) view;
+                if (selectedButton != null && selectedButton != tButton) {
+                    selectedButton.setChecked(false);
+                }
+                selectedButton = tButton;
+                selectPosition = (Integer) selectedButton.getTag();
+                startAnimation();
+                if (mOnButtonClickListener != null && tButton.isChecked()) {
+                    mOnButtonClickListener.onClick(selectPosition);
+                }
+            }
+        });
 
-					if (selectedButton != null && selectedButton != tButton) {
-						selectedButton.setChecked(false);
-					}
-					selectedButton = tButton;
-					selectPosition = (Integer) selectedButton.getTag();
-					startAnimation();
-					if (mOnButtonClickListener != null && tButton.isChecked()) {
-						mOnButtonClickListener.onClick(selectPosition);
-					}
-				}
-			});
-		}
 	}
+
+//	public void setValue(ArrayList<String> textArray, ArrayList<View> viewArray) {
+//		if (mContext == null) {
+//			return;
+//		}
+//		mTextArray = textArray;
+//		for (int i = 0; i < viewArray.size(); i++) {
+//			final RelativeLayout r = new RelativeLayout(mContext);
+//			int maxHeight = (int) (displayHeight * 0.5);
+//			RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, maxHeight);
+//			rl.leftMargin = 10;
+//			rl.rightMargin = 10;
+//			removeParent(viewArray.get(i));
+//			r.addView(viewArray.get(i), rl);
+//			mViewArray.add(r);
+//			r.setTag(SMALL);
+//			ToggleButton tButton = new ExToggleButtton(getContext());
+//			addView(tButton);
+//			View line = new TextView(mContext);
+//			line.setBackgroundResource(R.drawable.expand_choosebar_line);
+//			if (i < viewArray.size() - 1) {
+//				LayoutParams lp = new LayoutParams(2, LayoutParams.FILL_PARENT);
+//				addView(line, lp);
+//			}
+//			mToggleButton.add(tButton);
+//			tButton.setTag(i);
+//			tButton.setText(mTextArray.get(i));
+//
+//			r.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					onPressBack();
+//				}
+//			});
+//
+//			r.setBackgroundColor(mContext.getResources().getColor(R.color.expand_popup_background));
+//			tButton.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View view) {
+//					// initPopupWindow();
+//					ToggleButton tButton = (ToggleButton) view;
+//
+//					if (selectedButton != null && selectedButton != tButton) {
+//						selectedButton.setChecked(false);
+//					}
+//					selectedButton = tButton;
+//					selectPosition = (Integer) selectedButton.getTag();
+//					startAnimation();
+//					if (mOnButtonClickListener != null && tButton.isChecked()) {
+//						mOnButtonClickListener.onClick(selectPosition);
+//					}
+//				}
+//			});
+//		}
+//	}
 
 	private void removeParent(View view) {
 		// TODO Auto-generated method stub
@@ -173,9 +195,6 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 		popupWindow.showAsDropDown(this, 0, 0);
 	}
 
-	/**
-	 * 如果菜单成展开状态，则让菜单收回去
-	 */
 	public boolean onPressBack() {
 		if (popupWindow != null && popupWindow.isShowing()) {
 			popupWindow.dismiss();
@@ -212,19 +231,11 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 	}
 
 	private OnButtonClickListener mOnButtonClickListener;
-
-	/**
-	 * 设置tabitem的点击监听事件
-	 */
 	public void setOnButtonClickListener(OnButtonClickListener l) {
 		mOnButtonClickListener = l;
 	}
-
-	/**
-	 * 自定义tabitem点击回调接口
-	 */
 	public interface OnButtonClickListener {
-		public void onClick(int selectPosition);
+		void onClick(int selectPosition);
 	}
 
 }

@@ -30,7 +30,7 @@ public class ExTextView extends TextView{
     private void setAtribute(){
         setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtil.dip2px(getContext(),45)));
         setTextColor(getResources().getColor(R.color.black));
-        setGravity(Gravity.CENTER_VERTICAL);
+        setGravity(Gravity.CENTER);
         setPadding(CommonUtil.dip2px(getContext(),10),0,0,0);
         setTextSize((float) 17);
         setBackgroundResource(R.drawable.expand_eara_item_selector);

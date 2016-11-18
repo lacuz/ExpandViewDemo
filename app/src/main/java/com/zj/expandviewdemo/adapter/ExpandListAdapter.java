@@ -1,7 +1,6 @@
 package com.zj.expandviewdemo.adapter;
 
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ public class ExpandListAdapter extends ArrayAdapter<String> {
 	private String selectedText = "";
 	private int normalDrawbleId;
 	private int selectedDrawbleId;
-	private float textSize;
 	private OnClickListener onClickListener;
 	private OnItemClickListener mOnItemClickListener;
 
@@ -57,9 +55,6 @@ public class ExpandListAdapter extends ArrayAdapter<String> {
 		init();
 	}
 
-	/**
-	 * 设置选中的position,并通知列表刷新
-	 */
 	public void setSelectedPosition(int pos) {
 		if (mListData != null && pos < mListData.size()) {
 			selectedPos = pos;
@@ -99,12 +94,6 @@ public class ExpandListAdapter extends ArrayAdapter<String> {
 		return -1;
 	}
 
-	/**
-	 * 设置列表字体大小
-	 */
-	public void setTextSize(float tSize) {
-		textSize = tSize;
-	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -129,7 +118,6 @@ public class ExpandListAdapter extends ArrayAdapter<String> {
 			view.setText("不限");
 		else
 			view.setText(mString);
-		view.setTextSize(TypedValue.COMPLEX_UNIT_SP,textSize);
 
 		if (selectedText != null && selectedText.equals(mString)) {
 			view.setBackgroundResource(selectedDrawbleId);//设置选中的背景图片
@@ -145,9 +133,6 @@ public class ExpandListAdapter extends ArrayAdapter<String> {
 		mOnItemClickListener = item;
 	}
 
-	/**
-	 * 重新定义菜单选项单击接口
-	 */
 	public interface OnItemClickListener {
 		 void onItemClick(View view, int position);
 	}

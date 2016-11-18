@@ -38,7 +38,6 @@ public class ExSubViewSingle extends RelativeLayout implements ViewBaseAction {
 		mListView = new ExListView(getContext());
 		addView(mListView);
 		adapter = new ExpandListAdapter(context, data, R.drawable.expand_list_item_selected, R.drawable.expand_eara_item_selector);
-		adapter.setTextSize(17);
 		mListView.setAdapter(adapter);
 		adapter.setOnItemClickListener(new ExpandListAdapter.OnItemClickListener() {
 
