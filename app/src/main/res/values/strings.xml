@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">ExpandViewDemo</string>
-    <string name="no_data">"没有找到符合条件的"</string>
 </resources>

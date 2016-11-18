@@ -1,4 +1,4 @@
-package com.zj.expandviewdemo;
+package com.zj.expandviewdemo.model;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.zj.expandviewdemo.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class AreaInfo {
 	
 	public void init(){
 		JSONParser parser = new JSONParser();
-		String area_str = FileUtil.readAssets(context, "area.json");
+		String area_str = CommonUtil.readAssets(context, "area.json");
 		province_list = parser.getJSONParserResult(area_str, "area0");
 		// citycodeUtil.setProvince_list_code(parser.province_list_code);
 		city_map = parser.getJSONParserResultArray(area_str, "area1");

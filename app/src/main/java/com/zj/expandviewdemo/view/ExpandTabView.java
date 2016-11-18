@@ -1,4 +1,4 @@
-package com.zj.expandviewdemo;
+package com.zj.expandviewdemo.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,9 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.zj.expandviewdemo.R;
+import com.zj.expandviewdemo.action.ViewBaseAction;
 
 import java.util.ArrayList;
 
@@ -77,7 +80,7 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 		mTextArray = textArray;
 		for (int i = 0; i < viewArray.size(); i++) {
 			final RelativeLayout r = new RelativeLayout(mContext);
-			int maxHeight = (int) (displayHeight * 0.7);
+			int maxHeight = (int) (displayHeight * 0.5);
 			RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, maxHeight);
 			rl.leftMargin = 10;
 			rl.rightMargin = 10;
@@ -85,10 +88,10 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 			r.addView(viewArray.get(i), rl);
 			mViewArray.add(r);
 			r.setTag(SMALL);
-			ToggleButton tButton = (ToggleButton) inflater.inflate(R.layout.toggle_button, this, false);
+			ToggleButton tButton = new ExToggleButtton(getContext());
 			addView(tButton);
 			View line = new TextView(mContext);
-			line.setBackgroundResource(R.drawable.choosebar_line);
+			line.setBackgroundResource(R.drawable.expand_choosebar_line);
 			if (i < viewArray.size() - 1) {
 				LayoutParams lp = new LayoutParams(2, LayoutParams.FILL_PARENT);
 				addView(line, lp);
@@ -104,7 +107,7 @@ public class ExpandTabView extends LinearLayout implements OnDismissListener {
 				}
 			});
 
-			r.setBackgroundColor(mContext.getResources().getColor(R.color.popup_main_background));
+			r.setBackgroundColor(mContext.getResources().getColor(R.color.expand_popup_background));
 			tButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {

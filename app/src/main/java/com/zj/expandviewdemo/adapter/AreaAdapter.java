@@ -1,14 +1,14 @@
-package com.zj.expandviewdemo;
+package com.zj.expandviewdemo.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+
+import com.zj.expandviewdemo.model.Cityinfo;
+import com.zj.expandviewdemo.view.ExTextView;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class AreaAdapter extends BaseAdapter{
 	private Context mContext;
 	private List<Cityinfo> mListData;
 	private String[] mArrayData;
-	private Drawable selectedDrawble;
+	private int selectedDrawbleId;
 	private int normalDrawbleId;
 	private float textSize;
 	private String selectedText = "";
@@ -29,7 +29,7 @@ public class AreaAdapter extends BaseAdapter{
 	public AreaAdapter(Context context, List<Cityinfo> listData, int sId, int nId) {
 		mContext = context;
 		mListData = listData;
-		selectedDrawble = mContext.getResources().getDrawable(sId);
+		selectedDrawbleId = sId;
 		normalDrawbleId = nId;
 
 		init();
@@ -142,11 +142,11 @@ public class AreaAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		TextView view;
+		ExTextView view;
 		if (convertView == null) {
-			view = (TextView) LayoutInflater.from(mContext).inflate(R.layout.choose_item, parent, false);
+			view = new ExTextView(mContext);
 		} else {
-			view = (TextView) convertView;
+			view = (ExTextView) convertView;
 		}
 		view.setTag(position);
 		String mString = "";
@@ -166,9 +166,9 @@ public class AreaAdapter extends BaseAdapter{
 		view.setTextSize(TypedValue.COMPLEX_UNIT_SP,textSize);
 
 		if (selectedText != null && selectedText.equals(mString)) {
-			view.setBackgroundDrawable(selectedDrawble);//设置选中的背景图片
+			view.setBackgroundResource(selectedDrawbleId);//设置选中的背景图片
 		} else {
-			view.setBackgroundDrawable(mContext.getResources().getDrawable(normalDrawbleId));//设置未选中状态背景图片
+			view.setBackgroundResource(normalDrawbleId);//设置未选中状态背景图片
 		}
 		view.setPadding(20, 0, 0, 0);
 		view.setOnClickListener(onClickListener);

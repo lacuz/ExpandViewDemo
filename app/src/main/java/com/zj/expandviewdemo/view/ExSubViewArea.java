@@ -1,15 +1,21 @@
-package com.zj.expandviewdemo;
+package com.zj.expandviewdemo.view;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.zj.expandviewdemo.action.ExSubViewGravity;
+import com.zj.expandviewdemo.adapter.AreaAdapter;
+import com.zj.expandviewdemo.model.AreaInfo;
+import com.zj.expandviewdemo.model.Cityinfo;
+import com.zj.expandviewdemo.R;
+import com.zj.expandviewdemo.action.ViewBaseAction;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewArea extends LinearLayout implements ViewBaseAction {
+public class ExSubViewArea extends LinearLayout implements ViewBaseAction {
 
 	private ListView provinceListView;
 	private ListView citytListView;
@@ -29,27 +35,30 @@ public class ViewArea extends LinearLayout implements ViewBaseAction {
 
 	private AreaInfo area;
 
-	public ViewArea(Context context) {
+	public ExSubViewArea(Context context, ExSubViewGravity gravity) {
 		super(context);
-		init(context);
+		init(context,gravity);
 	}
 
-	private void init(Context context) {
+	private void init(Context context, ExSubViewGravity gravity) {
+		if(ExSubViewGravity.LEFT == gravity){
+			setBackgroundResource(R.drawable.expand_bg_left);
+		}else if(ExSubViewGravity.MID == gravity){
+			setBackgroundResource(R.drawable.expand_bg_mid);
+		}else if(ExSubViewGravity.RIGHT == gravity){
+			setBackgroundResource(R.drawable.expand_bg_right);
+		}
 		area = new AreaInfo(context);
 		provinceList = area.getProvince();
-
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.view_region, this, true);
-		provinceListView = (ListView) findViewById(R.id.listView1);
-		citytListView = (ListView) findViewById(R.id.listView2);
-		counyListView = (ListView) findViewById(R.id.listView3);
-		setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.choosearea_bg_left));
-
+		provinceListView = new ExListView(getContext());
+		citytListView =  new ExListView(getContext());
+		counyListView =  new ExListView(getContext());
+		addView(provinceListView);
+		addView(citytListView);
+		addView(counyListView);
 		provinceListViewAdapter = new AreaAdapter(context, provinceList,
-				R.drawable.choose_item_selected,
-				R.drawable.choose_eara_item_selector);
+				R.drawable.expand_list_item_selected,
+				R.drawable.expand_eara_item_selector);
 		provinceListViewAdapter.setTextSize(17);
 		provinceListViewAdapter.setSelectedPositionNoNotify(provincePosition);
 		provinceListView.setAdapter(provinceListViewAdapter);
@@ -70,8 +79,8 @@ public class ViewArea extends LinearLayout implements ViewBaseAction {
 				});
 
 		citytListViewViewAdapter = new AreaAdapter(context, cityList,
-				R.drawable.choose_item_selected,
-				R.drawable.choose_plate_item_selector);
+				R.drawable.expand_list_item_selected,
+				R.drawable.expand_eara_item_selector);
 		citytListViewViewAdapter.setTextSize(15);
 		citytListViewViewAdapter.setSelectedPositionNoNotify(cityPosition);
 		citytListView.setAdapter(citytListViewViewAdapter);
@@ -96,8 +105,8 @@ public class ViewArea extends LinearLayout implements ViewBaseAction {
 					}
 				});
 		counyListViewViewAdapter = new AreaAdapter(context, counyList,
-				R.drawable.choose_item_selected,
-				R.drawable.choose_plate_item_selector);
+				R.drawable.expand_list_item_selected,
+				R.drawable.expand_eara_item_selector);
 		counyListViewViewAdapter.setTextSize(15);
 		counyListViewViewAdapter.setSelectedPositionNoNotify(0);
 		counyListView.setAdapter(counyListViewViewAdapter);
@@ -140,8 +149,7 @@ public class ViewArea extends LinearLayout implements ViewBaseAction {
 		}
 
 		if (mOnSelectListener != null) {
-			mOnSelectListener.getValue(resultString);
-			mOnSelectListener.getId(resultId);
+			mOnSelectListener.getValue(resultString,resultId);
 		}
 	}
 
@@ -154,8 +162,7 @@ public class ViewArea extends LinearLayout implements ViewBaseAction {
 	}
 
 	public interface OnSelectListener {
-		public void getValue(String showText);
-		public void getId(String id);
+		 void getValue(String value,String cityId);
 	}
 
 	@Override

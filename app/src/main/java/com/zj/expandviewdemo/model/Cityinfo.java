@@ -1,4 +1,4 @@
-package com.zj.expandviewdemo;
+package com.zj.expandviewdemo.model;
 
 import java.io.Serializable;
 
